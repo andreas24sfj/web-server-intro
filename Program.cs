@@ -45,14 +45,15 @@ app.MapGet("/book", () => //Når serveren får en melding med metoden GET.
 {
     return library.ListAvailableBooks();
 });
-
-app.MapGet("/unavailbook", () => //Når serveren får en melding med metoden GET.
+//Metode GET
+//URI(sti):   /borrowed
+app.MapGet("/borrowed", () => //Når serveren får en melding med metoden GET.
 {
-    return library.ListUnAvailableBooks();
+    return library.ListBorrowedBooks();
 });
 
 // Metode:  POST
-// URI (sti)
+// URI (sti)  /book/borrow
 app.MapPost("/book/borrow", (BorrowRequest request) => 
 {
    Book? book = library.BorrowBook(request.Title);
@@ -65,7 +66,8 @@ app.MapPost("/book/borrow", (BorrowRequest request) =>
     return Results.Ok(book);
    }
 });
-
+//metode POST
+//URI(sti)  /book/return
 app.MapPost("/book/return", (BorrowRequest request) =>
 {
    Book? book = library.ReturnBook(request.Title);

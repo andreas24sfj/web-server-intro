@@ -22,11 +22,12 @@ class Library
         return availableBooks;
     }
 
-        public List<Book> ListUnAvailableBooks()
-    {
-        List<Book> unAvailableBooks = books.FindAll((book) => book.IsBorrowed == true);
-        // returner utilgjengelige bøker
-        return unAvailableBooks;
+        public List<Book> ListBorrowedBooks()
+    {   
+        // finn alle utlånte bøker
+        List<Book> borrowedBooks = books.FindAll((book) => book.IsBorrowed == true);
+        // returner utlånte bøker
+        return borrowedBooks;
     }
 
     public Book? BorrowBook(string title)
@@ -35,6 +36,7 @@ class Library
         List<Book> availbleBooks = ListAvailableBooks();
         // Finn ut om vi har den spesifikke boken tilgjengelig:
         Book? book = availbleBooks.Find((book) => book.Title == title);
+        // Låner ut boken
         book.IsBorrowed = true;
         // Returner resultatet
         return book;
@@ -42,12 +44,13 @@ class Library
 
     public Book? ReturnBook(string title)
     {
-        List<Book> borrowedBooks = ListUnAvailableBooks();
-
+        // Finn utlånte bøker
+        List<Book> borrowedBooks = ListBorrowedBooks();
+        // Let igjennom de utlånte bøkene for å finne den utlånte tittelen
         Book? book = borrowedBooks.Find((book) => book.Title == title);
+        // Boken blir lagt tilbake i biblioteket
         book.IsBorrowed = false;
-
+        // Returnerer resultatet
         return book;
     }
-
 }
