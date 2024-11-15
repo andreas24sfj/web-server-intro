@@ -35,12 +35,13 @@ class Library
         return borrowedBooks;
     }
 
-    public Book? BorrowBook(string title)
+    public Book? BorrowBook(string title, Guid ID)
     {
         // Finn tilgjengelige bøker:
         List<Book> availbleBooks = ListAvailableBooks();
         // Finn ut om vi har den spesifikke boken tilgjengelig:
-        Book? book = availbleBooks.Find((book) => book.Title == title);
+
+        Book? book = availbleBooks.Find((book) => book.Title == title || book.BookId == ID);
         // Låner ut boken
         book.BorrowId = Guid.NewGuid();
         book.IsBorrowed = true;
@@ -48,12 +49,12 @@ class Library
         return book;
     }
 
-    public Book? ReturnBook(string title)
+    public Book? ReturnBook(string title, Guid ID)
     {
         // Finn utlånte bøker
         List<Book> borrowedBooks = ListBorrowedBooks();
         // Let igjennom de utlånte bøkene for å finne den utlånte tittelen
-        Book? book = borrowedBooks.Find((book) => book.Title == title);
+        Book? book = borrowedBooks.Find((book) => book.Title == title || book.BookId == ID);
         // Boken blir lagt tilbake i biblioteket
         book.BorrowId = null;
         book.IsBorrowed = false;

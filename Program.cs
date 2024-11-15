@@ -60,9 +60,9 @@ app.MapGet("/book/all", () => //Når serveren får en melding med metoden GET.
 
 // Metode:  POST
 // URI (sti)  /book/borrow
-app.MapPost("/book/borrow", (BorrowRequest request) => 
+app.MapPost("/book/borrow", (Request request) => 
 {
-   Book? book = library.BorrowBook(request.Title);
+   Book? book = library.BorrowBook(request.Title, request.ID);
    if (book == null)
    {
     return Results.NotFound();
@@ -74,9 +74,9 @@ app.MapPost("/book/borrow", (BorrowRequest request) =>
 });
 //metode POST
 //URI(sti)  /book/return
-app.MapPost("/book/return", (BorrowRequest request) =>
+app.MapPost("/book/return", (Request request) =>
 {
-   Book? book = library.ReturnBook(request.Title);
+   Book? book = library.ReturnBook(request.Title, request.ID);
    if (book == null)
    {
     return Results.NotFound();
