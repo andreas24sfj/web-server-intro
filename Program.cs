@@ -51,6 +51,12 @@ app.MapGet("/borrowed", () => //Når serveren får en melding med metoden GET.
 {
     return library.ListBorrowedBooks();
 });
+//Metode GET
+//URI(sti):   /borrowed
+app.MapGet("/book/all", () => //Når serveren får en melding med metoden GET.
+{
+    return library.ListAllBooks();
+});
 
 // Metode:  POST
 // URI (sti)  /book/borrow
