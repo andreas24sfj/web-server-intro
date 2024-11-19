@@ -1,4 +1,7 @@
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Net.Http.Headers;
+using Microsoft.VisualBasic;
 
 class Library
 {
@@ -38,15 +41,37 @@ class Library
     public Book? BorrowBook(string title, Guid ID)
     {
         // Finn tilgjengelige bøker:
-        List<Book> availbleBooks = ListAvailableBooks();
+        List<Book> availableBooks = ListAvailableBooks();
         // Finn ut om vi har den spesifikke boken tilgjengelig:
-
-        Book? book = availbleBooks.Find((book) => book.Title == title || book.BookId == ID);
+        Book? book = availableBooks.Find((book) => book.Title == title) ?? availableBooks.Find((book) => book.BookId == ID);
         // Låner ut boken
         book.BorrowId = Guid.NewGuid();
         book.IsBorrowed = true;
         // Returner resultatet
         return book;
+    }
+
+    public List<Book> BorrowBooks(List<string> titles, List<Guid> IDs)
+    {
+    List<Book> availableBooks = ListAvailableBooks();
+    List<Book> booklist = new List<Book>();
+
+        foreach(var ID in IDs)
+        {
+            Book? books = availableBooks.Find((book) => book.BookId == ID);
+            books.BorrowId = Guid.NewGuid();
+            books.IsBorrowed = true;
+            booklist.Add(books);
+        }
+
+        foreach(var title in titles){
+            Book? books = availableBooks.Find((book) => book.Title == title && !booklist.Contains(book));
+            books.BorrowId = Guid.NewGuid();
+            books.IsBorrowed = true;
+            booklist.Add(books);
+        }
+
+        return booklist;
     }
 
     public Book? ReturnBook(string title, Guid ID)
@@ -60,5 +85,28 @@ class Library
         book.IsBorrowed = false;
         // Returnerer resultatet
         return book;
+    }
+
+        public List<Book> ReturnBooks(List<string> titles, List<Guid> IDs)
+    {
+    List<Book> availableBooks = ListAvailableBooks();
+    List<Book> booklist = new List<Book>();
+
+        foreach(var ID in IDs)
+        {
+            Book? books = availableBooks.Find((book) => book.BookId == ID);
+            books.BorrowId = null;
+            books.IsBorrowed = false;
+            booklist.Add(books);
+        }
+
+        foreach(var title in titles){
+            Book? books = availableBooks.Find((book) => book.Title == title && !booklist.Contains(book));
+            books.BorrowId = null;
+            books.IsBorrowed = false;
+            booklist.Add(books);
+        }
+
+        return booklist;
     }
 }

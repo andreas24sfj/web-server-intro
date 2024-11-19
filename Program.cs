@@ -72,6 +72,22 @@ app.MapPost("/book/borrow", (Request request) =>
     return Results.Ok(book);
    }
 });
+
+app.MapPost("/book/borrowlist", (Requests request) => 
+{
+
+   List<Book> books = library.BorrowBooks(request.Title, request.ID);
+
+   if (books == null)
+   {
+    return Results.NotFound();
+   }
+   else
+   {
+    return Results.Ok(books);
+   }
+});
+
 //metode POST
 //URI(sti)  /book/return
 app.MapPost("/book/return", (Request request) =>
@@ -86,6 +102,20 @@ app.MapPost("/book/return", (Request request) =>
     return Results.Ok(book);
    }
 });
+
+app.MapPost("/book/returnlist", (Requests request) =>
+{
+   List<Book> books = library.ReturnBooks(request.Title, request.ID);
+   if (books == null)
+   {
+    return Results.NotFound();
+   }
+   else
+   {
+    return Results.Ok(books);
+   }
+});
+
 
 // Start web serveren
 app.Run();
