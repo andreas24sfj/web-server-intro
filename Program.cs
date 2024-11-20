@@ -78,7 +78,7 @@ app.MapPost("/book/borrowlist", (Requests request) =>
 
    List<Book> books = library.BorrowBooks(request.Title, request.ID);
 
-   if (books == null)
+   if (books.Count == 0)
    {
     return Results.NotFound();
    }
@@ -106,7 +106,7 @@ app.MapPost("/book/return", (Request request) =>
 app.MapPost("/book/returnlist", (Requests request) =>
 {
    List<Book> books = library.ReturnBooks(request.Title, request.ID);
-   if (books == null)
+   if (books.Count == 0)
    {
     return Results.NotFound();
    }
