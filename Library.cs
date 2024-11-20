@@ -43,10 +43,13 @@ class Library
         // Finn tilgjengelige bøker:
         List<Book> availableBooks = ListAvailableBooks();
         // Finn ut om vi har den spesifikke boken tilgjengelig:
-        Book? book = availableBooks.Find((book) => book.Title == title) ?? availableBooks.Find((book) => book.BookId == ID);
+        Book? book = availableBooks.Find((book) => book.BookId == ID) ?? availableBooks.Find((book) => book.Title == title);
         // Låner ut boken
+        if (book != null)
+        {
         book.BorrowId = Guid.NewGuid();
         book.IsBorrowed = true;
+        }
         // Returner resultatet
         return book;
     }
@@ -58,17 +61,24 @@ class Library
 
         foreach(var ID in IDs)
         {
-            Book? books = availableBooks.Find((book) => book.BookId == ID);
-            books.BorrowId = Guid.NewGuid();
-            books.IsBorrowed = true;
-            booklist.Add(books);
+            Book? book = availableBooks.Find((book) => book.BookId == ID && !booklist.Contains(book));
+            if (book != null)
+            {
+            book.BorrowId = Guid.NewGuid();
+            book.IsBorrowed = true;
+            booklist.Add(book);
+            }
         }
 
-        foreach(var title in titles){
-            Book? books = availableBooks.Find((book) => book.Title == title && !booklist.Contains(book));
-            books.BorrowId = Guid.NewGuid();
-            books.IsBorrowed = true;
-            booklist.Add(books);
+        foreach(var title in titles)
+        {
+            Book? book = availableBooks.Find((book) => book.Title == title && !booklist.Contains(book));
+            if (book != null)
+            {
+            book.BorrowId = Guid.NewGuid();
+            book.IsBorrowed = true;
+            booklist.Add(book);
+            }
         }
 
         return booklist;
@@ -79,32 +89,42 @@ class Library
         // Finn utlånte bøker
         List<Book> borrowedBooks = ListBorrowedBooks();
         // Let igjennom de utlånte bøkene for å finne den utlånte tittelen
-        Book? book = borrowedBooks.Find((book) => book.Title == title || book.BookId == ID);
+        Book? book = borrowedBooks.Find((book) => book.BookId == ID) ?? borrowedBooks.Find((book) => book.Title == title);
         // Boken blir lagt tilbake i biblioteket
+        if (book != null)
+        {
         book.BorrowId = null;
         book.IsBorrowed = false;
+        }
         // Returnerer resultatet
         return book;
     }
 
         public List<Book> ReturnBooks(List<string> titles, List<Guid> IDs)
     {
-    List<Book> availableBooks = ListAvailableBooks();
+    List<Book> borrowedBooks = ListBorrowedBooks();
     List<Book> booklist = new List<Book>();
 
         foreach(var ID in IDs)
         {
-            Book? books = availableBooks.Find((book) => book.BookId == ID);
-            books.BorrowId = null;
-            books.IsBorrowed = false;
-            booklist.Add(books);
+            Book? book = borrowedBooks.Find((book) => book.BookId == ID && !booklist.Contains(book));
+            if (book != null)
+            {   
+            book.BorrowId = null;
+            book.IsBorrowed = false;
+            booklist.Add(book);}
+        
         }
 
-        foreach(var title in titles){
-            Book? books = availableBooks.Find((book) => book.Title == title && !booklist.Contains(book));
-            books.BorrowId = null;
-            books.IsBorrowed = false;
-            booklist.Add(books);
+        foreach(var title in titles)
+        {
+            Book? book = borrowedBooks.Find((book) => book.Title == title && !booklist.Contains(book));
+            if (book != null)
+            {
+            book.BorrowId = null;
+            book.IsBorrowed = false;
+            booklist.Add(book);
+            }
         }
 
         return booklist;
